@@ -1,21 +1,25 @@
+const letterWrapper = document.getElementById('unique_letter')
+const btn = document.getElementById('get_letter')
+const text = document.getElementById('text')
+
 const splitWords = (text) => {
     return text.replace(/[.,\/#!$%'\^&\*;:{}=\-_`~()]/g, " ").replace(/\s{2,}/g, " ").trim().split(' ')
 }
 
 const findUniqueLetterInWords = (words) => {
-    console.log(words, words.length)
     const uniqueLetters = [];
 
     for (const word of words) {
-        const charCount = {};
+
+        const charCount = new Map();
 
         for (const char of word) {
-            charCount[char] = (charCount[char] || 0) + 1;
+            charCount.set(char, (charCount.get(char) || 0) + 1);
         }
 
-        for (const key in charCount) {
-            if (charCount.hasOwnProperty(key) && charCount[key] === 1) {
-                uniqueLetters.push(key);
+        for (const [char, count] of charCount) {
+            if (count === 1) {
+                uniqueLetters.push(char);
                 break;
             }
         }
@@ -25,23 +29,21 @@ const findUniqueLetterInWords = (words) => {
 }
 
 const findUniqueLetterInArray = (letters) => {
-    console.log(letters, letters.length)
-    const letterCount = {};
+    const letterCount = new Map();
 
     for (const letter of letters) {
-        letterCount[letter] = (letterCount[letter] || 0) + 1;
+        letterCount.set(letter, (letterCount.get(letter) || 0) + 1);
     }
 
     for (const letter of letters) {
-        if (letterCount[letter] === 1) {
-            return letter;
-        }
+        if (letterCount.get(letter) === 1) return letter;
     }
 
-    return null;
+    return "There is no unique letter";
 }
 
-const text = "C makes it easy for you to shoot yourself in the foot. C++ makes that harder, but when you do, it blows away your whole leg. (с) Bjarne Stroustrup"
-
-
-console.log(findUniqueLetterInArray(findUniqueLetterInWords(splitWords(text))));
+btn.addEventListener('click', () => {
+    const arr = splitWords(text.value)
+    const letters = findUniqueLetterInWords(arr)
+    letterWrapper.innerText = `Unique letter : ${findUniqueLetterInArray(letters)}`
+})
