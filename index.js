@@ -6,41 +6,43 @@ const splitWords = (text) => {
     return text.replace(/[.,\/#!$%'\^&\*;:{}=\-_`~()]/g, " ").replace(/\s{2,}/g, " ").trim().split(' ')
 }
 
+const findUniqueLetter = (letters) => {
+    const letterSet = new Set();
+
+    for (const letter of letters) {
+        if (letterSet.has(letter)) {
+            letterSet.delete(letter);
+        } else {
+            letterSet.add(letter);
+        }
+    }
+
+    if (letterSet.size > 0) return letterSet.values().next().value;
+
+    return null
+};
+
 const findUniqueLetterInWords = (words) => {
     const uniqueLetters = [];
 
     for (const word of words) {
+        const uniqueLetter = findUniqueLetter(word)
 
-        const charCount = new Map();
-
-        for (const char of word) {
-            charCount.set(char, (charCount.get(char) || 0) + 1);
-        }
-
-        for (const [char, count] of charCount) {
-            if (count === 1) {
-                uniqueLetters.push(char);
-                break;
-            }
-        }
+        if (uniqueLetter !== null) uniqueLetters.push(uniqueLetter)
     }
 
-    return uniqueLetters;
-}
+    return uniqueLetters
+};
 
 const findUniqueLetterInArray = (letters) => {
-    const letterCount = new Map();
 
-    for (const letter of letters) {
-        letterCount.set(letter, (letterCount.get(letter) || 0) + 1);
+    const uniqueLetter = findUniqueLetter(letters)
+
+    if (uniqueLetter !== null) {
+        return uniqueLetter
     }
-
-    for (const letter of letters) {
-        if (letterCount.get(letter) === 1) return letter;
-    }
-
-    return "There is no unique letter";
-}
+    return "There is no unique letter"
+};
 
 btn.addEventListener('click', () => {
     const arr = splitWords(text.value)
